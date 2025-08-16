@@ -11,6 +11,9 @@ public class Shoot : MonoBehaviour
     [SerializeField] float bulletLifeTime = 3f; // 子弹存活时间
     [SerializeField] float bulletSpeed = 10f;  // 子弹速度
 
+    [Header("Audio")]
+    [SerializeField] AudioClip shootSound;     // 射击音效
+
     private float timeSinceLastShot = 0f;
 
     private void Start()
@@ -32,6 +35,12 @@ public class Shoot : MonoBehaviour
 
     private void Fire()
     {
+        // 播放射击音效
+        if (shootSound != null)
+        {
+            AudioSource.PlayClipAtPoint(shootSound, transform.position);
+        }
+
         // 生成子弹
         GameObject bullet = Instantiate(projectile, muzzlePosition.position, muzzlePosition.rotation);
 
@@ -39,7 +48,7 @@ public class Shoot : MonoBehaviour
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         if (rb != null)
         {
-            rb.velocity = muzzlePosition.up* bulletSpeed;
+            rb.velocity = muzzlePosition.up * bulletSpeed;
         }
 
         // 一定时间后销毁子弹
