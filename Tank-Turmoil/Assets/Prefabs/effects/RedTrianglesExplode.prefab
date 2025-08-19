@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5601036089067188820}
   - component: {fileID: 5601036089067188821}
   m_Layer: 0
-  m_Name: Triangles Explode
+  m_Name: RedTrianglesExplode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

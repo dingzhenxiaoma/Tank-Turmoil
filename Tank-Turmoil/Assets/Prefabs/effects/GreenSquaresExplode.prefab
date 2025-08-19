@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 74078499623404260}
   - component: {fileID: 74078499623404261}
   m_Layer: 0
-  m_Name: Squares Explode
+  m_Name: GreenSquaresExplode
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
