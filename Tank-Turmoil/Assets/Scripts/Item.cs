@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public enum ItemType { Laser,Frag }   // 道具类型
+    public enum ItemType { Laser,Frag,Deathray }   // 道具类型
     [SerializeField] ItemType itemType;
     [SerializeField] float lifeTime = 10f; // 道具存在时间
 
@@ -26,6 +26,11 @@ public class Item : MonoBehaviour
                 case ItemType.Frag:
                     {
                         shoot.EnableFragMode();
+                        break;
+                    }
+                case ItemType.Deathray:
+                    {
+                        shoot.EnableDeathrayMode();
                         break;
                     }
                 default:

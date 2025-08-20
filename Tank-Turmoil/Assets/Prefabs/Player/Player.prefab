@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &915626362051304144
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5936419936547976628}
+  m_Layer: 6
+  m_Name: LineRader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5936419936547976628
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915626362051304144}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1812558792700525312}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2766975847430806262
 GameObject:
   m_ObjectHideFlags: 0
@@ -52,7 +83,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -150,6 +181,7 @@ Transform:
   m_Children:
   - {fileID: 3185484561139714049}
   - {fileID: 5006119461915679467}
+  - {fileID: 5936419936547976628}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8317258255008456376
@@ -274,3 +306,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   fragBullet: {fileID: 3487557279295133632, guid: 34c56dee64be0de41a3de95c35aaaae6, type: 3}
+  deathrayRenderer: {fileID: 0}
+  deathrayMaxLength: 9
+  deathrayDuration: 2
+  deathrayGrowSpeed: 1
+  deathrayBendRadius: 4
+  playerMask:
+    serializedVersion: 2
+    m_Bits: 0

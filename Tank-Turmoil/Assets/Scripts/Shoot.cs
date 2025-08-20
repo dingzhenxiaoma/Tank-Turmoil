@@ -20,6 +20,7 @@ public class Shoot : MonoBehaviour
     [Header("Audio")]
     [SerializeField] AudioClip shootSound;     // 射击音效
     [SerializeField] AudioClip laserShootSound; // 激光发射音效
+    private AudioSource audioSource;
 
     [Header("Laser Settings")]
     [SerializeField] LineRenderer laserRenderer;   // 激光用的 LineRenderer
@@ -30,19 +31,26 @@ public class Shoot : MonoBehaviour
     [SerializeField] float maxLaserLength = 15f;   // 激光最大长度
     [SerializeField] LayerMask reflectMask;        // 可反射墙层
     [SerializeField] LayerMask damageMask;         // 可造成伤害目标层
+    private bool laserFiring = false;  // 是否正在发射实线激光(按键检测)
+    private bool isLaserFiring = false;  // 是否正在发射实线激光
 
     [Header("Frag Setting")]
     [SerializeField] GameObject fragBullet;    // 爆炸碎片子弹预制体
-
-    private float timeSinceLastShot = 0f;
-    private enum ModeType {normal,laser,frag}   // 发射类型
-    private ModeType modeType=ModeType.normal;
-    private bool laserFiring = false;  // 是否正在发射实线激光(按键检测)
-    private bool isLaserFiring=false;  // 是否正在发射实线激光
-
     GameObject currentFragBullet = null;  // 记录正在飞的Frag子弹
 
-    private AudioSource audioSource;
+    [Header("Deathray Settings")]
+    [SerializeField] LineRenderer deathrayRenderer;   // Deathray 光束
+    [SerializeField] float deathrayMaxLength = 12f;  // 光束最大长度
+    [SerializeField] float deathrayDuration = 3f;    // 光束存在的最长时间
+    [SerializeField] float deathrayBendRadius = 5f;  // 光束末端的弯曲半径（感应敌人）
+    [SerializeField] LayerMask playerMask;           // 检测玩家的层
+    private bool isDeathrayFiring = false;
+    private Coroutine deathrayRoutine;
+
+    private float timeSinceLastShot = 0f;
+    private enum ModeType {normal,laser,frag,deathray}   // 发射类型
+    private ModeType modeType=ModeType.normal;
+    
 
     private void Start()
     {
@@ -58,48 +66,90 @@ public class Shoot : MonoBehaviour
         switch (modeType)
         {
             case ModeType.normal:
-                {
-                    // 普通子弹发射
-                    if (playerType == PlayerType.Player1 && Input.GetKey(KeyCode.Space) && timeSinceLastShot >= fireRate)
-                    {
-                        Fire();
-                        timeSinceLastShot = 0f;
-                    }
-                    else if (playerType == PlayerType.Player2 && Input.GetKey(KeyCode.M) && timeSinceLastShot >= fireRate)
-                    {
-                        Fire();
-                        timeSinceLastShot = 0f;
-                    }
-                    break;
-                }
-            case ModeType.laser:
-                {
-                    // 检测射击键
-                    if (playerType == PlayerType.Player1) laserFiring = Input.GetKey(KeyCode.Space);
-                    else if (playerType == PlayerType.Player2) laserFiring = Input.GetKey(KeyCode.M);
+                HandleNormalFire();
+                break;
 
-                    if (isLaserFiring)
-                        DrawLaser(isLaserFiring);
-                    else
-                        DrawLaser(laserFiring);
-                    break;
-                }
+            case ModeType.laser:
+                HandleLaserFire();
+                break;
+
             case ModeType.frag:
-                {
-                    if (playerType == PlayerType.Player1 && Input.GetKeyDown(KeyCode.Space) &&((currentFragBullet!=null &&timeSinceLastShot>=0.2*fireRate)|| timeSinceLastShot >= fireRate))
-                    {
-                        HandleFrag();
-                        timeSinceLastShot = 0f;
-                    }
-                    else if (playerType == PlayerType.Player2 && Input.GetKeyDown(KeyCode.M) && ((currentFragBullet != null && timeSinceLastShot >= 0.2 * fireRate) || timeSinceLastShot >= fireRate))
-                    {
-                        HandleFrag();
-                        timeSinceLastShot = 0f;
-                    }
-                    break;
-                }
+                HandleFragFire();
+                break;
+
+            case ModeType.deathray:
+                HandleDeathrayFire();
+                break;
         }
     }
+
+    // 普通子弹
+    private void HandleNormalFire()
+    {
+        if (playerType == PlayerType.Player1 && Input.GetKey(KeyCode.Space) && timeSinceLastShot >= fireRate)
+        {
+            Fire();
+            timeSinceLastShot = 0f;
+        }
+        else if (playerType == PlayerType.Player2 && Input.GetKey(KeyCode.M) && timeSinceLastShot >= fireRate)
+        {
+            Fire();
+            timeSinceLastShot = 0f;
+        }
+    }
+
+    // Frag
+    private void HandleFragFire()
+    {
+        if (playerType == PlayerType.Player1 && Input.GetKeyDown(KeyCode.Space) && ((currentFragBullet != null && timeSinceLastShot >= 0.2 * fireRate) || timeSinceLastShot >= fireRate))
+        {
+            HandleFrag();
+            timeSinceLastShot = 0f;
+        }
+        else if (playerType == PlayerType.Player2 && Input.GetKeyDown(KeyCode.M) && ((currentFragBullet != null && timeSinceLastShot >= 0.2 * fireRate) || timeSinceLastShot >= fireRate))
+        {
+            HandleFrag();
+            timeSinceLastShot = 0f;
+        }
+    }
+
+    // Laser
+    private void HandleLaserFire()
+    {
+        if (playerType == PlayerType.Player1) laserFiring = Input.GetKey(KeyCode.Space);
+        else if (playerType == PlayerType.Player2) laserFiring = Input.GetKey(KeyCode.M);
+
+        if (isLaserFiring)
+            DrawLaser(isLaserFiring);
+        else
+            DrawLaser(laserFiring);
+    }
+
+    // =================== Deathray ===================
+    private void HandleDeathrayFire()
+    {
+        bool keyDown = (playerType == PlayerType.Player1) ? Input.GetKey(KeyCode.Space) : Input.GetKey(KeyCode.M);
+
+        if (keyDown)
+        {
+            if (!isDeathrayFiring)
+            {
+                // 开始发射
+                deathrayRoutine = StartCoroutine(DeathrayRoutine());
+            }
+        }
+        else
+        {
+            // 松开键
+            if (isDeathrayFiring)
+            {
+                StopCoroutine(deathrayRoutine);
+                DisableDeathrayMode();
+            }
+        }
+    }
+
+    // =================== 模式切换 ===================
 
     public void EnableLaserMode()
     {
@@ -123,6 +173,19 @@ public class Shoot : MonoBehaviour
         modeType = ModeType.normal;
     }
 
+
+    public void EnableDeathrayMode()
+    {
+        modeType = ModeType.deathray;
+        if (deathrayRenderer != null) deathrayRenderer.enabled = false;
+    }
+
+    public void DisableDeathrayMode()
+    {
+        modeType = ModeType.normal;
+        if (deathrayRenderer != null) deathrayRenderer.enabled = false;
+        isDeathrayFiring = false;
+    }
 
     private void Fire()
     {
@@ -299,4 +362,91 @@ public class Shoot : MonoBehaviour
     {
         currentFragBullet = null;  // 让 FragBullet 在爆炸或消失时回调
     }
+
+    IEnumerator DeathrayRoutine()
+    {
+        isDeathrayFiring = true;
+        deathrayRenderer.enabled = true;
+
+        float elapsed = 0f;
+        float segmentLength = 0.1f;        // 每小段长度
+        float totalLength = 0f;
+
+        Player self = GetComponent<Player>();
+
+        while (elapsed < deathrayDuration)
+        {
+            elapsed += Time.deltaTime;
+
+            List<(Vector3, Vector3)> pointAndDir = new List<(Vector3, Vector3)>();
+            pointAndDir.Add((muzzlePosition.position, muzzlePosition.up));
+            totalLength = 0f;
+
+            while (totalLength < deathrayMaxLength)
+            {
+                // 当前光束末端
+                Vector3 lastPoint = pointAndDir[pointAndDir.Count - 1].Item1;
+                Vector3 dir = pointAndDir[pointAndDir.Count - 1].Item2;
+
+                // 计算下一段光束方向，默认沿上一次方向
+                Vector3 nextPoint = lastPoint + dir * segmentLength;
+                Vector3 nextDir = dir;
+
+                // 检测弯曲：查找末端附近敌人
+                Collider2D target = Physics2D.OverlapCircle(lastPoint, deathrayBendRadius, playerMask);
+                if (target != null && target.CompareTag("Player"))
+                {
+                    Player targetPlayer = target.GetComponent<Player>();
+                    if (targetPlayer != null && targetPlayer != self)
+                    {
+                        // 逐渐弯向敌人位置
+                        Vector3 targetPos = target.transform.position;
+                        Vector3 bendDir = (targetPos - lastPoint).normalized;
+                        nextDir = (0.1f*bendDir+0.9f*dir).normalized;
+                        nextPoint = lastPoint + nextDir * segmentLength;
+                    }
+                }
+                pointAndDir.Add((nextPoint, nextDir));
+                totalLength += segmentLength;
+            }
+
+            List<Vector3> points = new List<Vector3>();
+            foreach (var pd in pointAndDir)
+                points.Add(pd.Item1);
+
+            // 更新 LineRenderer
+            if (points.Count > 1)
+            {
+                deathrayRenderer.positionCount = points.Count;
+                deathrayRenderer.SetPositions(points.ToArray());
+            }
+
+            if (elapsed <= Time.deltaTime * 2)
+                continue;
+
+            // --- 光束渲染完成后检测击中 ---
+            for (int i = 0; i < pointAndDir.Count - 1; i++)
+            {
+                Vector3 a = pointAndDir[i].Item1;
+                Vector3 b = pointAndDir[i + 1].Item1;
+                RaycastHit2D hit = Physics2D.Linecast(a, b, playerMask);
+                if (hit.collider != null && hit.collider.CompareTag("Player"))
+                {
+                    Player p = hit.collider.GetComponent<Player>();
+                    if (p != null && p != self)
+                    {
+                        p.Die();
+                        yield return new WaitForSeconds(0.5f);
+                        DisableDeathrayMode();
+                    }
+                }
+            }
+
+            yield return null;
+        }
+        DisableDeathrayMode();    
+    }
+
+
+
 }
