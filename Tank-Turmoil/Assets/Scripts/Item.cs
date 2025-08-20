@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public enum ItemType { Laser }   // 道具类型
-    [SerializeField] ItemType itemType = ItemType.Laser;
+    public enum ItemType { Laser,Frag }   // 道具类型
+    [SerializeField] ItemType itemType;
     [SerializeField] float lifeTime = 10f; // 道具存在时间
 
     private void Start()
@@ -21,6 +21,11 @@ public class Item : MonoBehaviour
                 case ItemType.Laser:
                     {
                         shoot.EnableLaserMode();
+                        break;
+                    }
+                case ItemType.Frag:
+                    {
+                        shoot.EnableFragMode();
                         break;
                     }
                 default:

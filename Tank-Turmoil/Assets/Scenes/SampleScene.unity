@@ -246,6 +246,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemPrefabs:
   - {fileID: 8701458754744593000, guid: 135892fcddd7da74cafa100c8f77f399, type: 3}
+  - {fileID: 4718357666647820862, guid: c9e3d392ceab811438453b6dd6498386, type: 3}
   spawnInterval: 5
   spawnMin: {x: -9.5, y: -4.9}
   spawnMax: {x: 9.5, y: 4.9}

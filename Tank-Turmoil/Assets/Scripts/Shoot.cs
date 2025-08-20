@@ -31,11 +31,16 @@ public class Shoot : MonoBehaviour
     [SerializeField] LayerMask reflectMask;        // 可反射墙层
     [SerializeField] LayerMask damageMask;         // 可造成伤害目标层
 
+    [Header("Frag Setting")]
+    [SerializeField] GameObject fragBullet;    // 爆炸碎片子弹预制体
+
     private float timeSinceLastShot = 0f;
-    private enum ModeType {normal,laser}   // 玩家类型
+    private enum ModeType {normal,laser,frag}   // 发射类型
     private ModeType modeType=ModeType.normal;
     private bool laserFiring = false;  // 是否正在发射实线激光(按键检测)
     private bool isLaserFiring=false;  // 是否正在发射实线激光
+
+    GameObject currentFragBullet = null;  // 记录正在飞的Frag子弹
 
     private AudioSource audioSource;
 
@@ -79,6 +84,20 @@ public class Shoot : MonoBehaviour
                         DrawLaser(laserFiring);
                     break;
                 }
+            case ModeType.frag:
+                {
+                    if (playerType == PlayerType.Player1 && Input.GetKeyDown(KeyCode.Space) &&((currentFragBullet!=null &&timeSinceLastShot>=0.2*fireRate)|| timeSinceLastShot >= fireRate))
+                    {
+                        HandleFrag();
+                        timeSinceLastShot = 0f;
+                    }
+                    else if (playerType == PlayerType.Player2 && Input.GetKeyDown(KeyCode.M) && ((currentFragBullet != null && timeSinceLastShot >= 0.2 * fireRate) || timeSinceLastShot >= fireRate))
+                    {
+                        HandleFrag();
+                        timeSinceLastShot = 0f;
+                    }
+                    break;
+                }
         }
     }
 
@@ -93,6 +112,17 @@ public class Shoot : MonoBehaviour
         modeType = ModeType.normal;
         if (laserRenderer != null) laserRenderer.enabled = false;
     }
+
+    public void EnableFragMode()
+    {
+        modeType =ModeType.frag;
+    }
+
+    public void DisableFragMode()
+    {
+        modeType = ModeType.normal;
+    }
+
 
     private void Fire()
     {
@@ -235,4 +265,38 @@ public class Shoot : MonoBehaviour
         isLaserFiring = false;
     }
 
+
+    private void HandleFrag()
+    {
+        if (currentFragBullet == null)
+        {
+            // 第一次按 → 发射普通子弹
+            currentFragBullet = Instantiate(fragBullet, muzzlePosition.position, muzzlePosition.rotation);
+            Rigidbody2D rb = currentFragBullet.GetComponent<Rigidbody2D>();
+            if (rb != null) rb.velocity = muzzlePosition.up * bulletSpeed;
+
+            // 给它加上 FragBullet 脚本
+            FragBullet fragScript = currentFragBullet.GetComponent<FragBullet>();
+            fragScript.Init(this, bulletLifeTime);
+
+            if (shootSound != null)
+            {
+                audioSource.clip = shootSound;
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            // 第二次按 → 触发爆炸
+            FragBullet fragScript = currentFragBullet.GetComponent<FragBullet>();
+            if (fragScript != null) fragScript.Explode();
+            currentFragBullet = null;
+            DisableFragMode();
+        }
+    }
+
+    public void ClearFragReference()
+    {
+        currentFragBullet = null;  // 让 FragBullet 在爆炸或消失时回调
+    }
 }

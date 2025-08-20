@@ -106,8 +106,12 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet") && !dead)
         {
-            Die();
-            Destroy(collision.gameObject);
+            Bullet bullet = collision.gameObject.GetComponent<Bullet>();
+            if (bullet != null)
+            {
+                bullet.Dead(); // ÈÃ×Óµ¯Ïú»Ù
+            }
+            Die(); // Ì¹¿ËËÀÍö
         }
     }
 

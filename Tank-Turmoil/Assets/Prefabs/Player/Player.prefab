@@ -273,3 +273,4 @@ MonoBehaviour:
   damageMask:
     serializedVersion: 2
     m_Bits: 64
+  fragBullet: {fileID: 3487557279295133632, guid: 34c56dee64be0de41a3de95c35aaaae6, type: 3}
