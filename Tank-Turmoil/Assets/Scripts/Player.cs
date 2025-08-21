@@ -16,6 +16,7 @@ public class Player : MonoBehaviour
     Animator anim;
 
     bool dead = false;
+    bool canMove = true;
     float redMoveInput;    // W/S
     float redTurnInput;    // A/D
 
@@ -29,7 +30,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        if (dead)
+        if (dead||!canMove)
         {
             redMoveInput=0;    // W/S
             redTurnInput = 0;    // A/D
@@ -98,8 +99,15 @@ public class Player : MonoBehaviour
                 transform.Translate(Vector3.up * greenMoveInput * moveSpeed * Time.fixedDeltaTime, Space.Self);
             }
         }
+    }
 
-            
+    public void EnableMove()
+    {
+        canMove = true;
+    }
+    public void DisableMove()
+    {
+        canMove=false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

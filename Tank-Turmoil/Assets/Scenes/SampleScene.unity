@@ -375,6 +375,7 @@ MonoBehaviour:
   - {fileID: 8701458754744593000, guid: 135892fcddd7da74cafa100c8f77f399, type: 3}
   - {fileID: 4718357666647820862, guid: c9e3d392ceab811438453b6dd6498386, type: 3}
   - {fileID: 7005198907125039049, guid: fc65e8093969ce445a726eb45be6a8be, type: 3}
+  - {fileID: 3471093031137819095, guid: d42b09773d56e7a4e9cd76a2481b1f2a, type: 3}
   spawnInterval: 5
   spawnMin: {x: -9.5, y: -4.9}
   spawnMax: {x: 9.5, y: 4.9}
@@ -749,6 +750,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 349767863928450080, guid: 00265aea04763cc4f9cb3a37686f0c87, type: 3}
+      propertyPath: RCmissileBullet
+      value: 
+      objectReference: {fileID: 8267919949853646365, guid: 47f42de3e355d3d449b34be82f4dd850, type: 3}
     - target: {fileID: 3224292699416994211, guid: 00265aea04763cc4f9cb3a37686f0c87, type: 3}
       propertyPath: m_Name
       value: GreenPlayer
@@ -808,15 +813,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2916778603889460637, guid: 0156bb48f4bddbf409942d3d966ef4a6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.9
+      value: -3.26
       objectReference: {fileID: 0}
     - target: {fileID: 2916778603889460637, guid: 0156bb48f4bddbf409942d3d966ef4a6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.49
+      value: -0.09
       objectReference: {fileID: 0}
     - target: {fileID: 2916778603889460637, guid: 0156bb48f4bddbf409942d3d966ef4a6, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.64804995
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2916778603889460637, guid: 0156bb48f4bddbf409942d3d966ef4a6, type: 3}
       propertyPath: m_LocalRotation.w
@@ -846,6 +851,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6815220982844390934, guid: 0156bb48f4bddbf409942d3d966ef4a6, type: 3}
+      propertyPath: RCmissileBullet
+      value: 
+      objectReference: {fileID: 1157296923265149550, guid: b4038d660ede7eb4e90c38c7a07981c6, type: 3}
     - target: {fileID: 8570590078623396757, guid: 0156bb48f4bddbf409942d3d966ef4a6, type: 3}
       propertyPath: m_Name
       value: RedPlayer

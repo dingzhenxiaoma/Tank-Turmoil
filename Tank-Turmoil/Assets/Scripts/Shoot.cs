@@ -47,8 +47,13 @@ public class Shoot : MonoBehaviour
     private bool isDeathrayFiring = false;
     private Coroutine deathrayRoutine;
 
+    [Header("RCmissile Settings")]
+    [SerializeField] GameObject RCmissileBullet;    // RCmissile子弹预制体
+    GameObject currentRCmissile = null;
+
+
     private float timeSinceLastShot = 0f;
-    private enum ModeType {normal,laser,frag,deathray}   // 发射类型
+    private enum ModeType {normal,laser,frag,deathray, rcmissile }   // 发射类型
     private ModeType modeType=ModeType.normal;
     
 
@@ -80,10 +85,13 @@ public class Shoot : MonoBehaviour
             case ModeType.deathray:
                 HandleDeathrayFire();
                 break;
+            case ModeType.rcmissile:
+                HandleRCmissileFire();
+                break;
         }
     }
 
-    // 普通子弹
+    // =================== normal ===================
     private void HandleNormalFire()
     {
         if (playerType == PlayerType.Player1 && Input.GetKey(KeyCode.Space) && timeSinceLastShot >= fireRate)
@@ -98,7 +106,7 @@ public class Shoot : MonoBehaviour
         }
     }
 
-    // Frag
+    // =================== Frag ===================
     private void HandleFragFire()
     {
         if (playerType == PlayerType.Player1 && Input.GetKeyDown(KeyCode.Space) && ((currentFragBullet != null && timeSinceLastShot >= 0.2 * fireRate) || timeSinceLastShot >= fireRate))
@@ -113,7 +121,7 @@ public class Shoot : MonoBehaviour
         }
     }
 
-    // Laser
+    // =================== Laser ===================
     private void HandleLaserFire()
     {
         if (playerType == PlayerType.Player1) laserFiring = Input.GetKey(KeyCode.Space);
@@ -146,6 +154,30 @@ public class Shoot : MonoBehaviour
                 StopCoroutine(deathrayRoutine);
                 DisableDeathrayMode();
             }
+        }
+    }
+
+    // =================== RCmissile ===================
+    private void HandleRCmissileFire()
+    {
+        // 玩家按下发射键才能发射导弹
+        bool fireKey = (playerType == PlayerType.Player1) ? Input.GetKeyDown(KeyCode.Space) : Input.GetKeyDown(KeyCode.M);
+
+        if (fireKey && currentRCmissile == null && timeSinceLastShot >= fireRate)
+        {
+            // 发射RCmissile
+            currentRCmissile = Instantiate(RCmissileBullet, muzzlePosition.position, muzzlePosition.rotation);
+
+            Player player = gameObject.GetComponent<Player>();
+            if (player != null)
+            {
+                player.DisableMove();
+            }
+
+            RCmissile rcScript = currentRCmissile.GetComponent<RCmissile>();
+            rcScript.Init(this, bulletSpeed*0.5f, bulletLifeTime, playerType);  // 初始化参数
+
+            timeSinceLastShot = 0f;
         }
     }
 
@@ -187,6 +219,21 @@ public class Shoot : MonoBehaviour
         isDeathrayFiring = false;
     }
 
+    public void EnableRCmissileMode()
+    {
+        modeType=ModeType.rcmissile;
+    }
+    public void DisableRCmissileMode()
+    {
+        modeType=ModeType.normal;
+    }
+
+    //=======================================================
+    //=============== 具体实现 ==============================
+    //=======================================================
+
+
+    //====================== normal =========================
     private void Fire()
     {
         //if (shootSound != null) AudioSource.PlayClipAtPoint(shootSound, transform.position);
@@ -204,6 +251,8 @@ public class Shoot : MonoBehaviour
         Destroy(bullet, bulletLifeTime);
     }
 
+
+    //====================== laser =========================
     private void DrawLaser(bool solid)
     {
         if (laserRenderer == null) return;
@@ -329,6 +378,7 @@ public class Shoot : MonoBehaviour
     }
 
 
+    //====================== frag =========================
     private void HandleFrag()
     {
         if (currentFragBullet == null)
@@ -363,6 +413,7 @@ public class Shoot : MonoBehaviour
         currentFragBullet = null;  // 让 FragBullet 在爆炸或消失时回调
     }
 
+    //====================== Deathray =========================
     IEnumerator DeathrayRoutine()
     {
         isDeathrayFiring = true;
@@ -438,15 +489,24 @@ public class Shoot : MonoBehaviour
                         p.Die();
                         yield return new WaitForSeconds(0.5f);
                         DisableDeathrayMode();
+                        timeSinceLastShot = 0f;
                     }
                 }
             }
 
             yield return null;
         }
-        DisableDeathrayMode();    
+        DisableDeathrayMode();
+        timeSinceLastShot = 0f;
     }
 
+
+    //====================== RCmissile =========================
+    public void ClearRCmissileReference()
+    {
+        currentRCmissile = null;
+        DisableRCmissileMode(); // 回到 normal
+    }
 
 
 }

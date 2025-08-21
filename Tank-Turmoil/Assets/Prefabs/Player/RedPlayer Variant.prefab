@@ -329,6 +329,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6780022589390639409}
     - target: {fileID: 8055107199470141579, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
+      propertyPath: RCmissileBullet
+      value: 
+      objectReference: {fileID: 7413951263944989511, guid: 447dc6bb9c420b647ab9c121d744cb60, type: 3}
+    - target: {fileID: 8055107199470141579, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: deathrayDuration
       value: 2
       objectReference: {fileID: 0}
