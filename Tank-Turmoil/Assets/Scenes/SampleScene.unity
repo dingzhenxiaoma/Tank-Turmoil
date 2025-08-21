@@ -377,6 +377,7 @@ MonoBehaviour:
   - {fileID: 7005198907125039049, guid: fc65e8093969ce445a726eb45be6a8be, type: 3}
   - {fileID: 3471093031137819095, guid: d42b09773d56e7a4e9cd76a2481b1f2a, type: 3}
   - {fileID: 7988040197951024900, guid: 91a5288bac10995408846335356a09c5, type: 3}
+  - {fileID: 7663884223644116470, guid: aa0b7e5493be9064f840ea61578eb4ca, type: 3}
   spawnInterval: 5
   spawnMin: {x: -9.5, y: -4.9}
   spawnMax: {x: 9.5, y: 4.9}
@@ -752,9 +753,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 349767863928450080, guid: 00265aea04763cc4f9cb3a37686f0c87, type: 3}
+      propertyPath: TrapElement
+      value: 
+      objectReference: {fileID: 2309430487661661013, guid: 85c410ae37e1b7b43b697fc299cc56de, type: 3}
+    - target: {fileID: 349767863928450080, guid: 00265aea04763cc4f9cb3a37686f0c87, type: 3}
       propertyPath: RCmissileBullet
       value: 
       objectReference: {fileID: 8267919949853646365, guid: 47f42de3e355d3d449b34be82f4dd850, type: 3}
+    - target: {fileID: 349767863928450080, guid: 00265aea04763cc4f9cb3a37686f0c87, type: 3}
+      propertyPath: trapEleLifeTime
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 3224292699416994211, guid: 00265aea04763cc4f9cb3a37686f0c87, type: 3}
       propertyPath: m_Name
       value: GreenPlayer
@@ -853,9 +862,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6815220982844390934, guid: 0156bb48f4bddbf409942d3d966ef4a6, type: 3}
+      propertyPath: TrapElement
+      value: 
+      objectReference: {fileID: 8397499429541528693, guid: f47e4065b88e4014c8a7c70308a0aced, type: 3}
+    - target: {fileID: 6815220982844390934, guid: 0156bb48f4bddbf409942d3d966ef4a6, type: 3}
       propertyPath: RCmissileBullet
       value: 
       objectReference: {fileID: 1157296923265149550, guid: b4038d660ede7eb4e90c38c7a07981c6, type: 3}
+    - target: {fileID: 6815220982844390934, guid: 0156bb48f4bddbf409942d3d966ef4a6, type: 3}
+      propertyPath: trapEleLifeTime
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 8570590078623396757, guid: 0156bb48f4bddbf409942d3d966ef4a6, type: 3}
       propertyPath: m_Name
       value: RedPlayer

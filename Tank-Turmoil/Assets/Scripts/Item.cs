@@ -1,8 +1,9 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class Item : MonoBehaviour
 {
-    public enum ItemType { Laser,Frag,Deathray,RCmissile,Gatling}   // 道具类型
+    public enum ItemType { Laser,Frag,Deathray,RCmissile,Gatling,Trap}   // 道具类型
     [SerializeField] ItemType itemType;
     [SerializeField] float lifeTime = 10f; // 道具存在时间
 
@@ -41,6 +42,11 @@ public class Item : MonoBehaviour
                 case ItemType.Gatling:
                     {
                         shoot.EnableGatlingMode();
+                        break;
+                    }
+                case ItemType.Trap:
+                    {
+                        shoot.EnableTrapMode();
                         break;
                     }
                 default:

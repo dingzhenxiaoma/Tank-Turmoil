@@ -57,9 +57,12 @@ public class Shoot : MonoBehaviour
     private Coroutine gatlingRoutine = null;
     private bool isGatling = false;
 
+    [Header("Trap Settings")]
+    [SerializeField] GameObject TrapElement;    // 陷阱预制体
+    [SerializeField] float trapEleLifeTime = 12f;     //陷阱寿命
 
     private float timeSinceLastShot = 0f;
-    private enum ModeType { normal, laser, frag, deathray, rcmissile, gatling }   // 发射类型
+    private enum ModeType { normal, laser, frag, deathray, rcmissile, gatling,trap }   // 发射类型
     private ModeType modeType = ModeType.normal;
 
 
@@ -96,6 +99,9 @@ public class Shoot : MonoBehaviour
                 break;
             case ModeType.gatling:
                 HandleGatlingFire();
+                break;
+            case ModeType.trap:
+                HandleTrapFire();
                 break;
         }
     }
@@ -217,6 +223,21 @@ public class Shoot : MonoBehaviour
 
     }
 
+    //=================== Trap ===================
+    private void HandleTrapFire()
+    {
+        if (playerType == PlayerType.Player1 && Input.GetKey(KeyCode.Space) && timeSinceLastShot >= fireRate)
+        {
+            TrapFire();
+            timeSinceLastShot = 0f;
+        }
+        else if (playerType == PlayerType.Player2 && Input.GetKey(KeyCode.M) && timeSinceLastShot >= fireRate)
+        {
+            TrapFire();
+            timeSinceLastShot = 0f;
+        }
+    }
+
     // =================== 模式切换 ===================
 
     public void EnableLaserMode()
@@ -273,6 +294,15 @@ public class Shoot : MonoBehaviour
     {
         gatlingRoutine = null;
         isGatling=false;
+        modeType = ModeType.normal;
+    }
+    public void EnableTrapMode()
+    {
+        modeType = ModeType.trap;
+    }
+
+    public void DisableTrapMode()
+    {
         modeType = ModeType.normal;
     }
 
@@ -581,4 +611,11 @@ public class Shoot : MonoBehaviour
         DisableGatlingMode();
     }
 
+    private void TrapFire()
+    {
+        GameObject trapEle = Instantiate(TrapElement, muzzlePosition.position, muzzlePosition.rotation);
+
+        DisableTrapMode();
+        Destroy(trapEle, trapEleLifeTime);
+    }
 }
