@@ -278,11 +278,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1812558792700525312, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.6
+      value: -2.16
       objectReference: {fileID: 0}
     - target: {fileID: 1812558792700525312, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.51
+      value: 1.47
       objectReference: {fileID: 0}
     - target: {fileID: 1812558792700525312, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: m_LocalPosition.z
@@ -329,9 +329,21 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8055107199470141579, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
+      propertyPath: TrapElement
+      value: 
+      objectReference: {fileID: 2309430487661661013, guid: 85c410ae37e1b7b43b697fc299cc56de, type: 3}
+    - target: {fileID: 8055107199470141579, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: laserRenderer
       value: 
       objectReference: {fileID: 4677786713039284092}
+    - target: {fileID: 8055107199470141579, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
+      propertyPath: RCmissileBullet
+      value: 
+      objectReference: {fileID: 8267919949853646365, guid: 47f42de3e355d3d449b34be82f4dd850, type: 3}
+    - target: {fileID: 8055107199470141579, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
+      propertyPath: trapEleLifeTime
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 8055107199470141579, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: deathrayRenderer
       value: 

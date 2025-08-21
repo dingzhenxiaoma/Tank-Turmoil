@@ -278,15 +278,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1812558792700525312, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.9
+      value: -3.26
       objectReference: {fileID: 0}
     - target: {fileID: 1812558792700525312, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.49
+      value: -0.09
       objectReference: {fileID: 0}
     - target: {fileID: 1812558792700525312, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.64804995
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1812558792700525312, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: m_LocalRotation.w
@@ -316,10 +316,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3185484561139714049, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5164820037230644488, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: m_Name
       value: RedPlayer Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 8055107199470141579, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
+      propertyPath: TrapElement
+      value: 
+      objectReference: {fileID: 8397499429541528693, guid: f47e4065b88e4014c8a7c70308a0aced, type: 3}
     - target: {fileID: 8055107199470141579, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: laserMaterial
       value: 
@@ -331,7 +339,11 @@ PrefabInstance:
     - target: {fileID: 8055107199470141579, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: RCmissileBullet
       value: 
-      objectReference: {fileID: 7413951263944989511, guid: 447dc6bb9c420b647ab9c121d744cb60, type: 3}
+      objectReference: {fileID: 1157296923265149550, guid: b4038d660ede7eb4e90c38c7a07981c6, type: 3}
+    - target: {fileID: 8055107199470141579, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
+      propertyPath: trapEleLifeTime
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 8055107199470141579, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
       propertyPath: deathrayDuration
       value: 2
