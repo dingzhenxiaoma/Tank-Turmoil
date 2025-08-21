@@ -6,6 +6,8 @@ public class Player : MonoBehaviour
 {
     public enum PlayerType { Player1, Player2 }   // 玩家类型
     [SerializeField] PlayerType playerType = PlayerType.Player1;
+    [Range(1, 2)]
+    [SerializeField] int playerId;//玩家编号
 
     [SerializeField] float moveSpeed = 6f;   // 移动速度
     [SerializeField] float turnSpeed = 150f; // 转向速度（角速度，°/s）
@@ -125,6 +127,7 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
+        ScoreManager.Instance.chgState(playerId);
         dead = true;
         // 销毁坦克
         Destroy(gameObject);
@@ -149,5 +152,7 @@ public class Player : MonoBehaviour
                 Destroy(effect, 2f);
             }
         }
+
+        
     }
 }

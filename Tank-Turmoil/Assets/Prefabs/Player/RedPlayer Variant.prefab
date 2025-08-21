@@ -364,6 +364,10 @@ PrefabInstance:
       propertyPath: deathrayBendRadius
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8317258255008456376, guid: 31d01eb2ee2127a478e741f78f11eede, type: 3}
+      propertyPath: playerId
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
