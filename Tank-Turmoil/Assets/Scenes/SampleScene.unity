@@ -376,6 +376,7 @@ MonoBehaviour:
   - {fileID: 4718357666647820862, guid: c9e3d392ceab811438453b6dd6498386, type: 3}
   - {fileID: 7005198907125039049, guid: fc65e8093969ce445a726eb45be6a8be, type: 3}
   - {fileID: 3471093031137819095, guid: d42b09773d56e7a4e9cd76a2481b1f2a, type: 3}
+  - {fileID: 7988040197951024900, guid: 91a5288bac10995408846335356a09c5, type: 3}
   spawnInterval: 5
   spawnMin: {x: -9.5, y: -4.9}
   spawnMax: {x: 9.5, y: 4.9}

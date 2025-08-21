@@ -51,11 +51,17 @@ public class Shoot : MonoBehaviour
     [SerializeField] GameObject RCmissileBullet;    // RCmissile子弹预制体
     GameObject currentRCmissile = null;
 
+    [Header("Gatling Settings")]
+    [SerializeField] float gatlingFireRate = 0.1f;   // Gatling 射击间隔，比 normal 更快
+    [SerializeField] float gatlingDuration = 5f;    // Gatling 持续时间
+    private Coroutine gatlingRoutine = null;
+    private bool isGatling = false;
+
 
     private float timeSinceLastShot = 0f;
-    private enum ModeType {normal,laser,frag,deathray, rcmissile }   // 发射类型
-    private ModeType modeType=ModeType.normal;
-    
+    private enum ModeType { normal, laser, frag, deathray, rcmissile, gatling }   // 发射类型
+    private ModeType modeType = ModeType.normal;
+
 
     private void Start()
     {
@@ -87,6 +93,9 @@ public class Shoot : MonoBehaviour
                 break;
             case ModeType.rcmissile:
                 HandleRCmissileFire();
+                break;
+            case ModeType.gatling:
+                HandleGatlingFire();
                 break;
         }
     }
@@ -175,10 +184,37 @@ public class Shoot : MonoBehaviour
             }
 
             RCmissile rcScript = currentRCmissile.GetComponent<RCmissile>();
-            rcScript.Init(this, bulletSpeed*0.5f, bulletLifeTime, playerType);  // 初始化参数
+            rcScript.Init(this, bulletSpeed * 0.5f, bulletLifeTime, playerType);  // 初始化参数
 
             timeSinceLastShot = 0f;
         }
+    }
+
+    //=================== Gatling ===================
+
+    private void HandleGatlingFire()
+    {
+
+        bool keyDown = (playerType == PlayerType.Player1) ? Input.GetKey(KeyCode.Space) : Input.GetKey(KeyCode.M);
+
+        if (keyDown)
+        {
+            if (!isGatling)
+            {
+                // 开始发射
+                gatlingRoutine = StartCoroutine(GatlingRoutine());
+            }
+        }
+        else
+        {
+            // 松开键
+            if (isGatling)
+            {
+                StopCoroutine(gatlingRoutine);
+                DisableGatlingMode();
+            }
+        }
+
     }
 
     // =================== 模式切换 ===================
@@ -197,7 +233,7 @@ public class Shoot : MonoBehaviour
 
     public void EnableFragMode()
     {
-        modeType =ModeType.frag;
+        modeType = ModeType.frag;
     }
 
     public void DisableFragMode()
@@ -221,11 +257,23 @@ public class Shoot : MonoBehaviour
 
     public void EnableRCmissileMode()
     {
-        modeType=ModeType.rcmissile;
+        modeType = ModeType.rcmissile;
     }
     public void DisableRCmissileMode()
     {
-        modeType=ModeType.normal;
+        modeType = ModeType.normal;
+    }
+
+    public void EnableGatlingMode()
+    {
+        modeType = ModeType.gatling;
+    }
+
+    public void DisableGatlingMode()
+    {
+        gatlingRoutine = null;
+        isGatling=false;
+        modeType = ModeType.normal;
     }
 
     //=======================================================
@@ -271,9 +319,9 @@ public class Shoot : MonoBehaviour
             {
                 points.Add(hit.point);
 
-                if(solid)
+                if (solid)
                 {
-                    if ( ((1 << hit.collider.gameObject.layer) & damageMask) != 0)
+                    if (((1 << hit.collider.gameObject.layer) & damageMask) != 0)
                     {
                         if (hit.collider.CompareTag("Player"))
                         {
@@ -281,7 +329,7 @@ public class Shoot : MonoBehaviour
                             if (p != null) p.Die();
                         }
                     }
-                } 
+                }
 
                 if (((1 << hit.collider.gameObject.layer) & reflectMask) != 0)
                 {
@@ -307,7 +355,7 @@ public class Shoot : MonoBehaviour
         {
             case PlayerType.Player1:
                 {
-                    laserRenderer.startColor =  Color.red ; 
+                    laserRenderer.startColor = Color.red;
                     break;
                 }
             case PlayerType.Player2:
@@ -318,7 +366,7 @@ public class Shoot : MonoBehaviour
             default:
                 break;
         }
-        
+
         // 设置虚线材质
         if (laserMaterial != null)
         {
@@ -371,7 +419,7 @@ public class Shoot : MonoBehaviour
             audioSource.Play();
         }
         // 等待 0.5 秒
-        yield return new WaitForSeconds(0.5f); 
+        yield return new WaitForSeconds(0.5f);
         DisableLaserMode();
         timeSinceLastShot = 0f;
         isLaserFiring = false;
@@ -453,7 +501,7 @@ public class Shoot : MonoBehaviour
                         // 逐渐弯向敌人位置
                         Vector3 targetPos = target.transform.position;
                         Vector3 bendDir = (targetPos - lastPoint).normalized;
-                        nextDir = (0.1f*bendDir+0.9f*dir).normalized;
+                        nextDir = (0.1f * bendDir + 0.9f * dir).normalized;
                         nextPoint = lastPoint + nextDir * segmentLength;
                     }
                 }
@@ -508,5 +556,29 @@ public class Shoot : MonoBehaviour
         DisableRCmissileMode(); // 回到 normal
     }
 
+    //====================== gatling ============================
+    IEnumerator GatlingRoutine()
+    {
+        isGatling = true;
+        float elapsed = 0f;
+
+        while (elapsed < gatlingDuration)
+        {
+            elapsed += Time.deltaTime;
+
+            bool fireKey = (playerType == PlayerType.Player1) ? Input.GetKey(KeyCode.Space) : Input.GetKey(KeyCode.M);
+
+            if (fireKey && timeSinceLastShot >= gatlingFireRate)
+            {
+                Fire();
+                timeSinceLastShot = 0f;
+            }
+
+            yield return null; // 等待下一帧
+        }
+
+        isGatling = false;
+        DisableGatlingMode();
+    }
 
 }
