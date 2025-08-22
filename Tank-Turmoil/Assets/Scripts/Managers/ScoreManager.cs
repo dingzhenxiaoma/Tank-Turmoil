@@ -12,6 +12,11 @@ public class ScoreManager : MonoBehaviour
     private bool[] isDeadArray = new bool[MaxPlayerNum+1]; // 最大 3 个玩家
     private int[] scoreArray = new int[MaxPlayerNum + 1]; // 最大 3 个玩家
 
+    private void Start()
+    {
+        reload();
+    }
+
     private void Awake()
     {
         if (Instance == null)
@@ -23,6 +28,10 @@ public class ScoreManager : MonoBehaviour
         {
             Destroy(gameObject); // 避免重复实例
         }
+    }
+
+    public void reload()
+    {
         System.Array.Fill(isDeadArray, false);
         System.Array.Fill(scoreArray, 0);
     }
@@ -33,7 +42,11 @@ public class ScoreManager : MonoBehaviour
         int winner = checkIfWin();
 
         if (winner != -1)
+        {
             AddScore(winner);
+            EventManager.Instance.reStart();
+            System.Array.Fill(isDeadArray, false);
+        }
         //show();
     }
 
@@ -57,6 +70,13 @@ public class ScoreManager : MonoBehaviour
     private void AddScore(int id)
     {
         scoreArray[id]++;
+    }
+
+    public int getScore(int id)
+    {
+        Debug.Log(scoreArray[id]);
+        return scoreArray[id];
+
     }
 
     private void show()
